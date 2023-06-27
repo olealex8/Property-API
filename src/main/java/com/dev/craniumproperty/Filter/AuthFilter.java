@@ -30,7 +30,7 @@ public class AuthFilter extends GenericFilterBean {
     UserRepository userRepository;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException, java.io.IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         httpResponse.setHeader("Access-Control-Allow-Origin", "*");
@@ -45,12 +45,15 @@ public class AuthFilter extends GenericFilterBean {
         String authHeader = httpRequest.getHeader("Authorization");
 
         logger.info(authHeader);
+//        logger.info(httpRequest.getHeader("Authorization").toString());
 
         if (authHeader != null) {
             String[] authHeaderArr = authHeader.split("Bearer ");
             if (authHeaderArr.length > 1 && authHeaderArr[1] != null) {
-                String token = authHeaderArr[1];
-                try {
+//                String token = getToken(httpRequest);
+            String token = authHeaderArr[1];
+
+        try {
                     Claims claims = Jwts.parser().setSigningKey(ConstantUtil.API_SECRET_KEY)
                             .parseClaimsJws(token).getBody();
 //                    if (claims.get("type").toString().compareTo("merchant") != 0) {
@@ -60,38 +63,21 @@ public class AuthFilter extends GenericFilterBean {
                     httpRequest.setAttribute("userId", Integer.parseInt(claims.get("userId").toString()));
 //                    }
                 } catch (Exception e) {
-                    try {
-                        httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "invalid / expired token");
-                    } catch (java.io.IOException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
+                    httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "invalid / expired token");
                     return;
                 }
             } else {
-                try {
-                    httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "Authorization token must be Bearer [token]");
-                } catch (java.io.IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "Authorization token must be Bearer [token]");
                 return;
             }
-        } else {
-            try {
-                httpResponse.sendError((HttpStatus.FORBIDDEN.value()), "Authorization token must be provided");
-            } catch (java.io.IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return;
         }
-        try {
-            filterChain.doFilter(servletRequest, servletResponse);
-        } catch (java.io.IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+//        else {
+//            httpResponse.sendError((HttpStatus.FORBIDDEN.value()), "Authorization token must be provided");
+//            return;
+//        }
+        filterChain.doFilter(servletRequest, servletResponse);
+
+
     }
 
     public UserEntity getUserFromToken(String token) {

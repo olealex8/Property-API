@@ -23,11 +23,11 @@ public class CraniumPropertyApplication {
 		SpringApplication.run(CraniumPropertyApplication.class, args);
 	}
 
-	@Bean
-	public FilterRegistrationBean<AuthFilter> FilterRegistrationBean(){
-		FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
-		AuthFilter authFilter  = new AuthFilter();
-		registrationBean.setFilter(authFilter);
-		return registrationBean;
-	}
+//	@Bean
+//	public FilterRegistrationBean<AuthFilter> FilterRegistrationBean(){
+//		FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
+//		AuthFilter authFilter  = new AuthFilter();
+//		registrationBean.setFilter(authFilter);
+//		return registrationBean;
+//	}
 }

@@ -18,14 +18,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfiguration {
-    
+
     /** ALLOW ALL **/
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/**").permitAll()
+//            .requestMatchers("/user/login").permitAll()
+//                .requestMatchers("/user/sign-up").permitAll()
+                    .requestMatchers("/**").permitAll()
+
         )
         .build();
     }
