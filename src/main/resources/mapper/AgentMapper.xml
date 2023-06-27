@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dev.craniumproperty.repository.AgentRepository">
+    <resultMap type="AgentEntity" id="result">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="description" column="description" />
+        <result property="experience" column="experience" />
+        <result property="agencyId" column="agency_id" />
+        <result property="bannerName" column="banner_name" />
+        <result property="bannerLink" column="banner_link" />
+        <result property="profileName" column="profile_name" />
+        <result property="profileLink" column="profile_link" />
+        <result property="email" column="email" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="createdAt" column="created_at" />
+        <result property="createdBy" column="created_by" />
+        <result property="updatedAt" column="updated_at" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="deleted" column="deleted" />
+        <result property="deletedAt" column="deleted_at" />
+        <result property="deletedBy" column="deleted_by" />
+    </resultMap>
+
+    <select id="findAll" resultType="AgentEntity" resultMap="result">
+        SELECT * FROM "public"."agents"
+    </select>
+
+    <insert id="insert" parameterType="AgentEntity"
+            keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO "public"."agents"(name, username, password, description, 
+                            experience, agency_id, banner_name, banner_link, 
+                            profile_name, profile_link, email, phone_number, 
+                            created_at, created_by, updated_at, updated_by, 
+                            deleted, deleted_at, deleted_by)
+        VALUES(#{name}, #{username}, #{password}, #{description}, #{experience}, 
+                        #{agencyId}, #{bannerName}, #{bannerLink}, #{profileName}, 
+                        #{profileLink}, #{email}, #{phoneNumber}, #{createdAt}, 
+                        #{createdBy}, #{updatedAt}, #{updatedBy}, #{deleted}, 
+                        #{deletedAt}, #{deletedBy})
+    </insert>
+
+    <update id="update" parameterType="AgentEntity">
+        UPDATE "public"."agents" SET name = #{name}, username = #{username}, password = #{password},
+                            description = #{description}, experience = #{experience},
+                            agency_id = #{agencyId}, banner_name = #{bannerName},
+                            banner_link = #{bannerLink}, profile_name = #{profileName},
+                            profile_link = #{profileLink}, email = #{email},
+                            phone_number = #{phoneNumber}, created_at = #{createdAt},
+                            created_by = #{createdBy}, updated_at = #{updatedAt},
+                            updated_by = #{updatedBy}, deleted = #{deleted},
+                            deleted_at = #{deletedAt}, deleted_by = #{deletedBy}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM "public"."agents" WHERE id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="int"
+            resultType="AgentEntity" resultMap="result">
+        SELECT * FROM "public"."agents" WHERE id = #{id}
+    </select>
+
+    <select id="findAvgRating" parameterType="int"
+            resultType="int">
+        SELECT AVG(CAST(rating as INT)) AS AVEGRAGE_RATING
+        FROM "public"."review" INNER JOIN "public"."agents"
+        ON "agents"."id" = "review"."agent_id"
+        WHERE "agents"."id" = #{id}
+    </select>
+
+</mapper>
